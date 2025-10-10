@@ -23,7 +23,7 @@ describe('Hardcoded Login Test', () => {
         const otpInput = await $('//input[@data-testid="testEnterMobileOTP"]');
         await otpInput.waitForDisplayed({ timeout: 10000 });
 
-        await browser.debug(); // Pause to allow manual OTP entry
+        // await browser.debug(); // Pause to allow manual OTP entry
         // await otpInput.setValue('123456');
 
         await browser.pause(10000); // Pause to ensure OTP is entered
@@ -31,6 +31,15 @@ describe('Hardcoded Login Test', () => {
         // const verifyMobileNumberBtn = await $('//div[@data-testid="testTapVerifyMobileNumber"]');
         // await verifyMobileNumberBtn.waitForClickable({ timeout: 10000 });
         // await verifyMobileNumberBtn.click();
-        // this opens notifications on your Android emulator/device
+        
+        // const permissionsPopup = await $('//div[text()="Permissions"]');
+        // await permissionsPopup.waitForExist({ timeout: 10000 });
+        
+        // // Wait for Allow button
+        // const allowButton = await $('//div[@data-testid="testTapAllowButton"]');
+        // await allowButton.waitForDisplayed({ timeout: 10000 });
+        // await allowButton.click();
+
+
     });
 });

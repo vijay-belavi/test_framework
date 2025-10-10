@@ -51,9 +51,22 @@ exports.config = {
     //
    capabilities: [
     {
-        browserName: 'chrome', // Web
-        maxInstances: 1
-    },
+    maxInstances: 1,
+    browserName: 'chrome',
+    'goog:chromeOptions': {
+        args: [
+            '--start-maximized',       // optional: maximize window
+            '--disable-popup-blocking', // optional
+            '--disable-infobars'       // optional
+        ],
+        prefs: {
+            'profile.default_content_setting_values.notifications': 1, // allow notifications
+            'profile.default_content_setting_values.geolocation': 1,   // allow location
+            'profile.default_content_setting_values.media_stream_camera': 1, // allow camera
+            'profile.default_content_setting_values.media_stream_mic': 1    // allow mic (if needed)
+        }
+    }
+}
     // {
     //     // com.zype.mobile.stage/com.zype.mobile.MainActivity
     //     platformName: 'Android', // Mobile
