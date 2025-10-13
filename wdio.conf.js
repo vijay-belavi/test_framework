@@ -28,6 +28,13 @@ exports.config = {
         // 'path/to/excluded/files'
     ],
     //
+
+    waitforTimeout: 30000, // default wait time for all waitFor* commands
+
+    before: async function () {
+        // You can also set implicit wait globally here:
+        await browser.setTimeout({ implicit: 30000 });
+    },
     // ============
     // Capabilities
     // ============
@@ -49,35 +56,35 @@ exports.config = {
     // Sauce Labs platform configurator - a great tool to configure your capabilities:
     // https://saucelabs.com/platform/platform-configurator
     //
-   capabilities: [
-    {
-    maxInstances: 1,
-    browserName: 'chrome',
-    'goog:chromeOptions': {
-        args: [
-            '--start-maximized',       // optional: maximize window
-            '--disable-popup-blocking', // optional
-            '--disable-infobars'       // optional
-        ],
-        prefs: {
-            'profile.default_content_setting_values.notifications': 1, // allow notifications
-            'profile.default_content_setting_values.geolocation': 1,   // allow location
-            'profile.default_content_setting_values.media_stream_camera': 1, // allow camera
-            'profile.default_content_setting_values.media_stream_mic': 1    // allow mic (if needed)
+    capabilities: [
+        {
+            maxInstances: 1,
+            browserName: 'chrome',
+            'goog:chromeOptions': {
+                args: [
+                    '--start-maximized',       // optional: maximize window
+                    '--disable-popup-blocking', // optional
+                    '--disable-infobars'       // optional
+                ],
+                prefs: {
+                    'profile.default_content_setting_values.notifications': 1, // allow notifications
+                    'profile.default_content_setting_values.geolocation': 1,   // allow location
+                    'profile.default_content_setting_values.media_stream_camera': 1, // allow camera
+                    'profile.default_content_setting_values.media_stream_mic': 1    // allow mic (if needed)
+                }
+            }
         }
-    }
-}
-    // {
-    //     // com.zype.mobile.stage/com.zype.mobile.MainActivity
-    //     platformName: 'Android', // Mobile
-    //     'appium:deviceName': 'emulator-5554',
-    //     'appium:appPackage': 'com.zype.mobile.stage',
-    //     'appium:appActivity': 'com.zype.mobile.MainActivity',
-    //     'appium:automationName': 'UiAutomator2',
-    //     maxInstances: 1
-    // }
-],
-baseUrl: 'https://www.google.com', // used for web tests
+        // {
+        //     // com.zype.mobile.stage/com.zype.mobile.MainActivity
+        //     platformName: 'Android', // Mobile
+        //     'appium:deviceName': 'emulator-5554',
+        //     'appium:appPackage': 'com.zype.mobile.stage',
+        //     'appium:appActivity': 'com.zype.mobile.MainActivity',
+        //     'appium:automationName': 'UiAutomator2',
+        //     maxInstances: 1
+        // }
+    ],
+    baseUrl: 'https://www.google.com', // used for web tests
 
     //
     // ===================
@@ -135,7 +142,7 @@ baseUrl: 'https://www.google.com', // used for web tests
     // Make sure you have the wdio adapter package for the specific framework installed
     // before running any tests.
     framework: 'mocha',
-    
+
     //
     // The number of times to retry the entire specfile when it fails as a whole
     // specFileRetries: 1,
@@ -317,4 +324,14 @@ baseUrl: 'https://www.google.com', // used for web tests
     */
     // afterAssertion: function(params) {
     // }
+
+    // ... your other config
+    afterTest: async function (test, context, { error, result, duration, passed, retries }) {
+        if (!passed) {
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            const filepath = `./screenshots/${test.title}-${timestamp}.png`;
+            await browser.saveScreenshot(filepath);
+            console.log(`❌ Test failed! Screenshot saved at: ${filepath}`);
+        }
+    },
 }

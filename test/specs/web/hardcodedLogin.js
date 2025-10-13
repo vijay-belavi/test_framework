@@ -1,171 +1,214 @@
 const { ok } = require('assert');
-const { openMobileNotifications } = require('../../helpers/mobileHelper');
+const { deleteData } = require('../API/deleteData');
 
 describe('Hardcoded Login Test', () => {
-    it('should enter mobile number and click Next, then open mobile notifications', async () => {
-        // --- WEB FLOW ---
+
+    let mobileNumber = '8792593183';
+    let explicitWait = 30000;
+    let pauseTime = 1000;
+
+    before(async () => {
         await browser.url('https://stage-portal.getzype.com/');
         await browser.maximizeWindow();
-        await browser.setTimeout({ implicit: 10000 });
+        await browser.setTimeout({ implicit: 180000 });
 
+        await deleteData('+91' + mobileNumber).catch(err => {
+            console.warn('Could not delete mobile, continuing with test...');
+        });
+    });
+
+    it('Enter Mobile Number and click Next', async () => {
         const mobileInput = await $('//input[@data-testid="testEnterMobileNumber"]');
-        await mobileInput.waitForDisplayed({ timeout: 10000 });
-        await mobileInput.setValue('8792593183');
+        await mobileInput.waitForDisplayed({ timeout: explicitWait });
+        await mobileInput.waitForEnabled({ timeout: explicitWait });
+        await mobileInput.clearValue();
+        await browser.pause(pauseTime);
+
+        for (const digit of mobileNumber) {
+            await mobileInput.addValue(digit);
+        }
 
         const nextBtn = await $('//div[@data-testid="testTapMobileNumberNextButton"]');
-        await nextBtn.waitForClickable({ timeout: 10000 });
+        await nextBtn.waitForClickable({ timeout: explicitWait });
         await nextBtn.click();
+        await browser.pause(pauseTime);
+    });
 
-        console.log('✅ Web part completed');
+    // it('Enter OTP', async () => {
+    //     const otpInput = await $('//input[@data-testid="testEnterMobileOTP"]');
+    //     await otpInput.waitForDisplayed({ timeout: explicitWait });
+    //     await browser.pause(10000); // ensure OTP is entered
+    // });
 
-        // --- MOBILE FLOW ---
-        await openMobileNotifications();
-
-        //Resume Web Flow
-        const otpInput = await $('//input[@data-testid="testEnterMobileOTP"]');
-        await otpInput.waitForDisplayed({ timeout: 10000 });
-
-        // await browser.debug(); // Pause to allow manual OTP entry
-        // await otpInput.setValue('123456');
-
-        await browser.pause(10000); // Pause to ensure OTP is entered
-
-        // const verifyMobileNumberBtn = await $('//div[@data-testid="testTapVerifyMobileNumber"]');
-        // await verifyMobileNumberBtn.waitForClickable({ timeout: 10000 });
-        // await verifyMobileNumberBtn.click();
-
-        // const permissionsPopup = await $('//div[text()="Permissions"]');
-        // await permissionsPopup.waitForExist({ timeout: 10000 });
-
-        // // Wait for Allow button
-        // const allowButton = await $('//div[@data-testid="testTapAllowButton"]');
-        // await allowButton.waitForDisplayed({ timeout: 10000 });
-        // await allowButton.click();
-
-        // -- First Name and Last Name Page -- //
+    it('Enter First Name and Last Name', async () => {
         const firstNameTextField = await $('//input[@data-testid="testEnterFirstName"]');
-        await firstNameTextField.waitForDisplayed({ timeout: 5000 }); // wait up to 5s
+        await firstNameTextField.waitForDisplayed({ timeout: explicitWait });
         await firstNameTextField.setValue('Vijay');
+        await browser.pause(pauseTime);
 
-        // Wait for DOB input and enter value
         const lastNameTextField = await $('//input[@data-testid="testEnterLastName"]');
-        await lastNameTextField.waitForDisplayed({ timeout: 5000 });
+        await lastNameTextField.waitForDisplayed({ timeout: explicitWait });
         await lastNameTextField.setValue('Belavi');
+        await browser.pause(pauseTime);
 
-        // Wait for TnC checkbox and click
         const saveAndContinueBtn = await $('//div[@data-testid="testTapSaveAndContinueButtonName"]');
-        await saveAndContinueBtn.waitForDisplayed({ timeout: 5000 });
+        await saveAndContinueBtn.waitForDisplayed({ timeout: explicitWait });
         await saveAndContinueBtn.click();
+        await browser.pause(pauseTime);
+    });
 
-        // -- PAN Number Page -- //
-
-        // Wait for PAN input and enter value
+    it('Enter PAN and DOB', async () => {
         const panInput = await $('//input[@data-testid="testEnterPanNumber"]');
-        await panInput.waitForDisplayed({ timeout: 5000 }); // wait up to 5s
+        await panInput.waitForDisplayed({ timeout: explicitWait });
         await panInput.setValue('DGOPB7256L');
+        await browser.pause(pauseTime);
 
-        // Wait for DOB input and enter value
         const dobInput = await $('//input[@data-testid="testEnterDOB"]');
-        await dobInput.waitForDisplayed({ timeout: 5000 });
+        await dobInput.waitForDisplayed({ timeout: explicitWait });
         await dobInput.setValue('18/02/1999');
+        await browser.pause(pauseTime);
+    });
 
-        // Wait for TnC checkbox and click
+    it('Accept TnC and KYC', async () => {
         const tncCheckbox = await $('//div[@data-testid="testTapCheckBoxTnC"]');
-        await tncCheckbox.waitForDisplayed({ timeout: 5000 });
+        await tncCheckbox.waitForDisplayed({ timeout: explicitWait });
         await tncCheckbox.click();
+        await browser.pause(pauseTime);
 
-        // Wait for KYC checkbox and click
         const kycCheckbox = await $('//div[@data-testid="testTapCheckBoxKYC"]');
-        await kycCheckbox.waitForDisplayed({ timeout: 5000 });
+        await kycCheckbox.waitForDisplayed({ timeout: explicitWait });
         await kycCheckbox.click();
+        await browser.pause(pauseTime);
 
         const nextPanBtn = await $('//div[@data-testid="testTapNextButtonPan"]');
-        await nextPanBtn.waitForClickable({ timeout: 10000 });
+        await nextPanBtn.waitForClickable({ timeout: explicitWait });
         await nextPanBtn.click();
+        await browser.pause(pauseTime);
+    });
 
-         await browser.pause(10000);
-
-        // -- Email Otp Verification Page -- //
-
-         const emailTextField = await $('//div[@data-testid="testTapNextButtonPan"]');
-        await emailTextField.waitForClickable({ timeout: 10000 });
+    it('Enter Email and Confirm Employment', async () => {
+        const emailTextField = await $('//input[@data-testid="testEnterEmail"]');
+        await emailTextField.waitForClickable({ timeout: explicitWait });
         await emailTextField.setValue('vijaybelavi1432@gmail.com');
+        await browser.pause(pauseTime);
 
-        const continueBtn = await $('//div[@data-testid="testTapNextButtonPan"]');
-        await continueBtn.waitForClickable({ timeout: 10000 });
+        const continueBtn = await $('//div[@data-testid="testTapEmailOptionsNextButton"]');
+        await continueBtn.waitForClickable({ timeout: explicitWait });
         await continueBtn.click();
+        await browser.pause(pauseTime);
 
-        const emailOtpTextField = await $('//div[@data-testid="testTapNextButtonPan"]');
-        await emailOtpTextField.waitForClickable({ timeout: 10000 });
-        await emailOtpTextField.setValue('123456');
-
-
-        // -- Employement Verification Page -- //
-
-        const salariedOption = await $('//div[@data-testid="testTapNextButtonPan"]');
-        await salariedOption.waitForClickable({ timeout: 10000 });
+        const salariedOption = await $('//div[contains(text(),"Salaried")]');
+        await salariedOption.waitForClickable({ timeout: explicitWait });
         await salariedOption.click();
+        await browser.pause(pauseTime);
 
-        const okBtn = await $('//div[@data-testid="testTapNextButtonPan"]');
-        await okBtn.waitForClickable({ timeout: 10000 });
-        await okBtn.click();
+        const confirmBtn = await $('//div[@data-testid="testPressPositiveButton"]');
+        await confirmBtn.waitForClickable({ timeout: explicitWait });
+        await confirmBtn.click();
+        await browser.pause(pauseTime);
+    });
 
-        const personalEmailCheckbox = await $('//div[@data-testid="testTapNextButtonPan"]');
-        await personalEmailCheckbox.waitForClickable({ timeout: 10000 });
+    it('Select Personal Email and Company', async () => {
+        const personalEmailCheckbox = await $('//div[@data-testid="testTapExistedEmail"]');
+        await personalEmailCheckbox.waitForEnabled({ timeout: explicitWait });
         await personalEmailCheckbox.click();
+        await browser.pause(pauseTime);
 
-        const companyNameTextfield = await $('//div[@data-testid="testTapNextButtonPan"]');
-        await companyNameTextfield.waitForClickable({ timeout: 10000 });
+        const companyName = 'FireFlink';
+        const companyNameTextfield = await $('//div[@data-testid="testTapOrgName"]');
+        await companyNameTextfield.waitForClickable({ timeout: explicitWait });
         await companyNameTextfield.click();
+        await browser.pause(pauseTime);
 
-        const searchTextField = await $('//div[@data-testid="testTapNextButtonPan"]');
-        await searchTextField.waitForClickable({ timeout: 10000 });
-        await searchTextField.setValue('FireFlink');
+        const searchTextField = await $('//input[@data-testid="testEnterOrgName"]');
+        await searchTextField.waitForClickable({ timeout: explicitWait });
+        await searchTextField.setValue(companyName);
+        await browser.pause(pauseTime);
 
-        const firstCompanyNameOption = await $('//div[@data-testid="testTapNextButtonPan"]');
-        await firstCompanyNameOption.waitForClickable({ timeout: 10000 });
+        const firstCompanyNameOption = await $(`//div[contains(text(), '${companyName.toUpperCase()}')]`);
+        await firstCompanyNameOption.waitForClickable({ timeout: explicitWait });
         await firstCompanyNameOption.click();
+        await browser.pause(pauseTime);
+    });
 
-        const salaryTextField = await $('//div[@data-testid="testTapNextButtonPan"]');
-        await salaryTextField.waitForClickable({ timeout: 10000 });
+    it('Enter Salary and Family Income', async () => {
+        const salaryTextField = await $('//input[@data-testid="testEnterMonthlyIncome"]');
+        await salaryTextField.waitForClickable({ timeout: explicitWait });
         await salaryTextField.setValue('65000');
+        await browser.pause(pauseTime);
 
-        const annaualIncomeDropdown = await $('//div[@data-testid="testTapNextButtonPan"]');
-        await annaualIncomeDropdown.waitForClickable({ timeout: 10000 });
-        await annaualIncomeDropdown.click();
+        const annualIncomeDropdown = await $('//div[@data-testid="testTapFamilyIncome"]');
+        await annualIncomeDropdown.waitForClickable({ timeout: explicitWait });
+        await annualIncomeDropdown.click();
+        await browser.pause(pauseTime);
 
-        const annualyIncomeOption = await $('//div[@data-testid="testTapNextButtonPan"]');
-        await annualyIncomeOption.waitForClickable({ timeout: 10000 });
-        await annualyIncomeOption.click();
+        const incomeOption = 3;
+        const annualIncomeOption = await $(`(//div[@data-testid="testTapOptionSelectionSwitch"])['${incomeOption}']`);
+        await annualIncomeOption.waitForClickable({ timeout: explicitWait });
+        await annualIncomeOption.click();
+        await browser.pause(pauseTime);
 
-        const employementContinueBtn = await $('//div[@data-testid="testTapNextButtonPan"]');
-        await employementContinueBtn.waitForClickable({ timeout: 10000 });
-        await employementContinueBtn.click();
+        const employmentContinueBtn = await $('//div[@data-testid="testTapNextButtonWorkDetails"]');
+        await employmentContinueBtn.waitForClickable({ timeout: explicitWait });
+        await employmentContinueBtn.click();
+        await browser.pause(pauseTime);
+    });
 
+    it('Enter Address Details', async () => {
+        const noContinueWithPersonalEmailBtn = await $('//div[@data-testid="testPressNegativeButton"]');
+        await noContinueWithPersonalEmailBtn.waitForClickable({ timeout: explicitWait });
+        await noContinueWithPersonalEmailBtn.click();
+        await browser.pause(pauseTime);
 
-        // -- L1S1 FLOW -- // -- Address Details Page --
-        const houseNumberTextField = await $('//div[@data-testid="testTapNextButtonPan"]');
-        await houseNumberTextField.waitForClickable({ timeout: 10000 });
+        const houseNumberTextField = await $('//input[@data-testid="testAddressScreenFloorInput"]');
+        await houseNumberTextField.waitForClickable({ timeout: explicitWait });
         await houseNumberTextField.setValue('test');
+        await browser.pause(pauseTime);
 
-        const houseNumberTextField2 = await $('//div[@data-testid="testTapNextButtonPan"]');
-        await houseNumberTextField2.waitForClickable({ timeout: 10000 });
+        const houseNumberTextField2 = await $('//input[@data-testid="testAddressScreenBuildingInput"]');
+        await houseNumberTextField2.waitForClickable({ timeout: explicitWait });
         await houseNumberTextField2.setValue('test');
+        await browser.pause(pauseTime);
 
-        const pinCodeTextField = await $('//div[@data-testid="testTapNextButtonPan"]');
-        await pinCodeTextField.waitForClickable({ timeout: 10000 });
+        const pinCodeTextField = await $('//input[@data-testid="testAddressScreenPinInput"]');
+        await pinCodeTextField.waitForClickable({ timeout: explicitWait });
         await pinCodeTextField.setValue('570001');
+        await browser.pause(pauseTime);
 
-        const landMarkTextField = await $('//div[@data-testid="testTapNextButtonPan"]');
-        await landMarkTextField.waitForClickable({ timeout: 10000 });
+        const landMarkTextField = await $('//input[@data-testid="testAddressScreenLandmarkInput"]');
+        await landMarkTextField.waitForDisplayed({ timeout: explicitWait });
         await landMarkTextField.setValue('test');
+        await browser.pause(pauseTime);
 
-        const addressContinueBtn = await $('//div[@data-testid="testTapNextButtonPan"]');
-        await addressContinueBtn.waitForClickable({ timeout: 10000 });
+        const addressContinueBtn = await $('//div[@data-testid="testAddressScreenConfirmButton"]');
+        await addressContinueBtn.waitForClickable({ timeout: explicitWait });
         await addressContinueBtn.click();
+        await browser.pause(pauseTime);
+    });
 
+    it('should verify approved loan limit text', async () => {
+             // 1 second
 
-        // -- Got L1 Limit and L1 Limit Page Displayed --
+        const approvedLimitElement = await $('//div[@data-testid="testApprovedLimitText"]');
 
+        // Wait until the element is displayed
+        await approvedLimitElement.waitForDisplayed({ timeout: explicitWait });
+        await browser.pause(pauseTime);
+
+        // Get the text of the element
+        const text = await approvedLimitElement.getText();
+        console.log('🔹 Approved Limit Text:', text);
+
+        // Assert that it contains the expected value
+        const expectedText = 'Approved Loan Limit';
+        if (!text.includes(expectedText)) {
+            throw new Error(`Expected text "${expectedText}" but found "${text}"`);
+        }
+        await browser.pause(pauseTime);
+    });
+
+    after(async () => {
+    console.log('Test completed');
+        // await browser.deleteSession();
     });
 });
