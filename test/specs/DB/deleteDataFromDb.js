@@ -3,9 +3,9 @@ const mysql = require('mysql2/promise');
 async function deleteUser({ userId, email }) {
   // DB connection config
   const connection = await mysql.createConnection({
-    host: 'localhost',      // your DB host
-    user: 'root',           // your DB username
-    password: 'password',   // your DB password
+    host: 'devdb.getzype.com',      // your DB host
+    user: 'supriya',           // your DB username
+    password: 'ty948LCvZpED3pF!',   // your DB password
     database: 'supertokens' // your DB name
   });
 
@@ -24,7 +24,7 @@ async function deleteUser({ userId, email }) {
         `DELETE FROM emailpassword_user_to_tenant WHERE user_id = ?`, [userId]
       );
       await connection.execute(
-        `DELETE FROM usermetadata WHERE user_id = ?`, [userId]
+        `DELETE FROM user_metadata WHERE user_id = ?`, [userId]
       );
     }
 
@@ -37,7 +37,7 @@ async function deleteUser({ userId, email }) {
         `DELETE FROM emailpassword_users WHERE email = ?`, [email]
       );
       await connection.execute(
-        `DELETE FROM usermetadata WHERE email = ?`, [email]
+        `DELETE FROM user_metadata WHERE user_id = ?`, [use]
       );
     }
 

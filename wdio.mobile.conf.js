@@ -1,5 +1,3 @@
-const path = require('path');
-
 exports.config = {
     //
     // ====================
@@ -12,7 +10,7 @@ exports.config = {
     // Specify Test Files
     // ==================
     specs: [
-        './test/specs/web/**/*.js'
+        './test/specs/mobile/**/*.js'   // mobile test specs
     ],
     exclude: [
         // 'path/to/excluded/files'
@@ -35,28 +33,22 @@ exports.config = {
     maxInstances: 1,
     capabilities: [
         {
-            maxInstances: 1,
-            browserName: 'chrome',
-            'goog:chromeOptions': {
-                args: [
-                    '--start-maximized',
-                    '--disable-popup-blocking',
-                    '--disable-infobars',
-                    '--use-fake-ui-for-media-stream',                  
-                    '--use-fake-device-for-media-stream',              
-                    `--use-file-for-fake-video-capture=${path.resolve(__dirname, './resources/camera_selfie.y4m')}`
-                ],
-                prefs: {
-                    'profile.default_content_setting_values.notifications': 1,
-                    'profile.default_content_setting_values.geolocation': 1,
-                    'profile.default_content_setting_values.media_stream_camera': 1,
-                    'profile.default_content_setting_values.media_stream_mic': 1
-                }
-            }
+            // Example for Android
+            platformName: 'Android',             // or 'iOS' for iPhone/iPad
+            // platformVersion: '13',               // your device OS version
+            // deviceName: 'Pixel_7_Pro',           // device name or emulator
+            automationName: 'UiAutomator2',      // 'XCUITest' for iOS
+            appPackage: '', // path to your app
+            appActivity: '*',                 // wait for this activity
+            noReset: true,                        // do not reset app state
+            // fullReset: false,
+            newCommandTimeout: 240,
+            autoGrantPermissions: true,           // auto-grant app permissions
+            autoAcceptAlerts: true
         }
     ],
 
-    baseUrl: 'https://www.google.com', 
+    baseUrl: '', // not required for mobile, kept empty
 
     logLevel: 'info',
     bail: 0,
@@ -64,7 +56,7 @@ exports.config = {
     connectionRetryTimeout: 120000,
     connectionRetryCount: 3,
 
-    services: ['visual'],
+    services: ['appium'],
 
     framework: 'mocha',
     reporters: ['spec'],
@@ -74,6 +66,7 @@ exports.config = {
         timeout: 60000
     },
 
+    //
     // =====
     // Hooks
     // =====
@@ -81,7 +74,7 @@ exports.config = {
         if (!passed) {
             const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
             const filepath = `./screenshots/${test.title}-${timestamp}.png`;
-            await browser.saveScreenshot(filepath);
+            await driver.saveScreenshot(filepath); // driver for mobile
             console.log(`❌ Test failed! Screenshot saved at: ${filepath}`);
         }
     },
