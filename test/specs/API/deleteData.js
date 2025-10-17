@@ -1,5 +1,5 @@
 const axios = require('axios');
-
+// const mobile = '8792593183'; // Replace with the actual mobile number
 async function deleteData(mobile) {
   try {
     const response = await axios.post(

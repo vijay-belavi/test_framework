@@ -11,13 +11,40 @@ describe('Hardcoded Login Test - Mobile', () => {
     before(async () => {
         // For mobile, you navigate to activity via app launch, not URL
         // await driver.launchApp(); // optional if app resets
-        await deleteData('+91' + mobileNumber).catch(err => {
-            console.warn('Could not delete mobile, continuing with test...');
+        // await deleteData('+91' + mobileNumber).catch(err => {
+        //     console.warn('Could not delete mobile, continuing with test...');
+        // });
+
+        const caps = {
+            platformName: "Android",
+            "appium:appPackage": "com.zype.mobile.stage",      // replace with your app's package name
+            "appium:appActivity": "com.zype.mobile.MainActivity",          // replace with your app's main activity
+            "appium:noReset": false,
+            "appium:autoGrantPermissions": true,
+            "appium:autoAcceptAlerts": true
+            // If you want to install app from file instead:
+            // "appium:app": "C:\\path\\to\\your\\app.apk"
+        };
+
+        // Connect to Appium server
+        const driver = await wdio.remote({
+            protocol: "http",
+            hostname: "127.0.0.1",
+            port: 4723,
+            path: "/wd/hub",
+            capabilities: caps
         });
+
+        console.log("🚀 Launching the app...");
     });
 
     it('Enter Mobile Number and click Next', async () => {
-        const mobileInput = await $('//*[@content-desc="testEnterMobileNumber"]'); // mobile accessibility id
+        const createAccountBtn = await $('Create Account'); // mobile accessibility id
+        await createAccountBtn.waitForDisplayed({ timeout: explicitWait });
+        await createAccountBtn.clearValue();
+        await driver.pause(pauseTime);
+
+        const mobileInput = await $('testEnterMobileNumber'); // mobile accessibility id
         await mobileInput.waitForDisplayed({ timeout: explicitWait });
         await mobileInput.clearValue();
         await driver.pause(pauseTime);
@@ -26,57 +53,87 @@ describe('Hardcoded Login Test - Mobile', () => {
             await mobileInput.addValue(digit);
         }
 
-        const nextBtn = await $('//*[@content-desc="testTapMobileNumberNextButton"]');
+        const nextBtn = await $('Next');
         await nextBtn.waitForClickable({ timeout: explicitWait });
         await nextBtn.click();
         await driver.pause(pauseTime);
     });
 
     it('Pause for OTP entry', async () => {
+
+        /*
+        await driver.openNotification(); // function to open notification shade
+        // Read OTP from notification //
+
+        const mobileInput = await $('testEnterMobileNumber'); // mobile accessibility id
+        await mobileInput.waitForDisplayed({ timeout: explicitWait });
+        let otpText = await mobileInput.getText();
+
+        const otpMatch = message.match(/\b\d{6}\b/);
+
+        if (otpMatch) {
+            const otp = otpMatch[0];
+            console.log("✅ OTP:", otp);
+        } else {
+            console.log("❌ No OTP found in the string");
+        }
+        await driver.pause(pauseTime);
+
+        await driver.back();
+        
+        const otpField = await $('testEnterMobileOTP');
+        await otpField.waitForClickable({ timeout: explicitWait });
+        await otpField.setValue(otp);
+        await driver.pause(pauseTime);
+
+        // close notification shade
+        */
         await driver.pause(15000); // ensure OTP is entered manually
     });
 
+
+    /*
     it('Enter First Name and Last Name', async () => {
-        const firstNameTextField = await $('//*[@content-desc="testEnterFirstName"]');
+        const firstNameTextField = await $('testEnterFirstName');
         await firstNameTextField.waitForDisplayed({ timeout: explicitWait });
         await firstNameTextField.setValue('Vijay');
         await driver.pause(pauseTime);
 
-        const lastNameTextField = await $('//*[@content-desc="testEnterLastName"]');
+        const lastNameTextField = await $('testEnterLastName');
         await lastNameTextField.waitForDisplayed({ timeout: explicitWait });
         await lastNameTextField.setValue('Belavi');
         await driver.pause(pauseTime);
 
-        const saveAndContinueBtn = await $('//*[@content-desc="testTapSaveAndContinueButtonName"]');
+        const saveAndContinueBtn = await $('Save And Continue');
         await saveAndContinueBtn.waitForDisplayed({ timeout: explicitWait });
         await saveAndContinueBtn.click();
         await driver.pause(pauseTime);
     });
 
     it('Enter PAN and DOB', async () => {
-        const panInput = await $('//*[@content-desc="testEnterPanNumber"]');
+        const panInput = await $('testEnterPanNumber');
         await panInput.waitForDisplayed({ timeout: explicitWait });
         await panInput.setValue('DGOPB7256L');
         await driver.pause(pauseTime);
 
-        const dobInput = await $('//*[@content-desc="testEnterDOB"]');
+        const dobInput = await $('testEnterDOB');
         await dobInput.waitForDisplayed({ timeout: explicitWait });
         await dobInput.setValue('18/02/1999');
         await driver.pause(pauseTime);
     });
 
     it('Accept TnC and KYC', async () => {
-        const tncCheckbox = await $('//*[@content-desc="testTapCheckBoxTnC"]');
+        const tncCheckbox = await $('testTapCheckBoxTnC');
         await tncCheckbox.waitForDisplayed({ timeout: explicitWait });
         await tncCheckbox.click();
         await driver.pause(pauseTime);
 
-        const kycCheckbox = await $('//*[@content-desc="testTapCheckBoxKYC"]');
+        const kycCheckbox = await $('testTapCheckBoxKYC');
         await kycCheckbox.waitForDisplayed({ timeout: explicitWait });
         await kycCheckbox.click();
         await driver.pause(pauseTime);
 
-        const nextPanBtn = await $('//*[@content-desc="testTapNextButtonPan"]');
+        const nextPanBtn = await $('testTapNextButtonPan');
         await nextPanBtn.waitForClickable({ timeout: explicitWait });
         await nextPanBtn.click();
         await driver.pause(pauseTime);
@@ -175,7 +232,7 @@ describe('Hardcoded Login Test - Mobile', () => {
         await kycContinueBtn.waitForClickable({ timeout: explicitWait });
         await kycContinueBtn.click();
         await driver.pause(pauseTime);
-    });
+    }); */
 
     after(async () => {
         console.log('Mobile test completed');

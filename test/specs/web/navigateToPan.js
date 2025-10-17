@@ -2,7 +2,7 @@ const ConfigManager = require('../../helpers/ConfigManager');
 
 // Optional: provide local overrides
 const config = new ConfigManager({ 
-    baseUrl: 'https://pre-portal.zype.co.in/',
+    baseUrl: 'https://stage-portal.zype.com/',
     mobileNumber: '8792593183', 
      pauseTime: 5000 
 });
