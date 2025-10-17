@@ -1,1 +1,2 @@
 ../resources/camera_selfie.y4m filter=lfs diff=lfs merge=lfs -text
+../resources/camera_selfieMock.y4m filter=lfs diff=lfs merge=lfs -text
