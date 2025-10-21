@@ -44,7 +44,7 @@ exports.config = {
                     '--disable-infobars',
                     '--use-fake-ui-for-media-stream',                  
                     '--use-fake-device-for-media-stream',              
-                    `--use-file-for-fake-video-capture=${path.resolve(__dirname, './resources/camera_selfie.y4m')}`
+                    `--use-file-for-fake-video-capture=${path.resolve(__dirname, './resources/camera_selfieMock_vijay.y4m')}`
                 ],
                 prefs: {
                     'profile.default_content_setting_values.notifications': 1,
