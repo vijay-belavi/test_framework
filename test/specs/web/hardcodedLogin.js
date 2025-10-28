@@ -224,44 +224,50 @@ describe('Hardcoded Login Test', () => {
     });
 
 
-    /*  // -- DigiiLocker Flow -- //
-       it('Complete DigiLocker Flow', async () => {
-           const aadhaarInput = await $('//input[contains(@placeholder,"Enter Aadhaar Number")]');
-           await aadhaarInput.waitForClickable({ timeout: explicitWait });
-           await aadhaarInput.setValue('709877120164');
-           await browser.pause(pauseTime);
-   
-           for (let i = 0; i < 10; i++) {
-               console.log(`Iteration number: ${i + 1}`);
-   
-               const imageElement = await $('//img[contains(@id,"captcha_img")]');
-               await imageElement.waitForDisplayed({ timeout: explicitWait });
-               await imageElement.saveScreenshot(`./screenshots/web/exampleImage_${i + 1}.png`);
-               await browser.pause(pauseTime);
-   
-               (async () => {
-                   const imagePath = `./screenshots/web/exampleImage_${i + 1}.png`; // path to your image
-   
-                   const { data: { text } } = await Tesseract.recognize(
-                       imagePath,
-                       'eng', // language (can use others like 'hin', 'fra', etc.)
-                       {
-                           logger: info => console.log(info.status, info.progress) // optional progress log
-                       }
-                   );
-   
-                   console.log('Extracted Text: ');
-                   console.log(text);
-               })();
-   
-               const tryAnotherLink = await $('//small[contains(text(),"Try another")]/..');
-               await tryAnotherLink.waitForClickable({ timeout: explicitWait });
-               await tryAnotherLink.click();
-               await browser.pause(pauseTime);
-   
-           }
-   
-       }); */
+    // -- DigiiLocker Flow -- //
+    it('Complete DigiLocker Flow', async () => {
+        const aadhaarInput = await $('//input[contains(@placeholder,"Enter Aadhaar Number")]');
+        await aadhaarInput.waitForClickable({ timeout: explicitWait });
+        await aadhaarInput.setValue('709877120164');
+        await browser.pause(pauseTime);
+
+        await browser.pause(10000);
+
+        /*  for (let i = 0; i < 10; i++) {
+              console.log(`Iteration number: ${i + 1}`);
+  
+              const imageElement = await $('//img[contains(@id,"captcha_img")]');
+              await imageElement.waitForDisplayed({ timeout: explicitWait });
+              await imageElement.saveScreenshot(`./screenshots/web/exampleImage_${i + 1}.png`);
+              await browser.pause(pauseTime);
+  
+              (async () => {
+                  const imagePath = `./screenshots/web/exampleImage_${i + 1}.png`; // path to your image
+  
+                  const { data: { text } } = await Tesseract.recognize(
+                      imagePath,
+                      'eng', // language (can use others like 'hin', 'fra', etc.)
+                      {
+                          logger: info => console.log(info.status, info.progress) // optional progress log
+                      }
+                  );
+  
+                  console.log('Extracted Text: ');
+                  console.log(text); 
+              })();
+  
+              const tryAnotherLink = await $('//small[contains(text(),"Try another")]/..');
+              await tryAnotherLink.waitForClickable({ timeout: explicitWait });
+              await tryAnotherLink.click();
+              await browser.pause(pauseTime);
+  
+          } */
+
+        const pinInput = await $('//input[contains(@placeholder,"Enter Aadhaar Number")]');
+        await pinInput.waitForClickable({ timeout: explicitWait });
+        await pinInput.setValue('180299');
+        await browser.pause(pauseTime);
+    });
 
 
     it('Take Selfie and Proceed', async () => {
@@ -304,7 +310,7 @@ describe('Hardcoded Login Test', () => {
         await browser.pause(pauseTime);
 
     });
-    /*
+
     it('Add Bank Account', async () => {
         const continueBtn = await $('//div[@data-testid="testTapReversePennyConfirmButton"]');
         await continueBtn.waitForClickable({ timeout: explicitWait });
@@ -378,22 +384,22 @@ describe('Hardcoded Login Test', () => {
 
         const referenceContactOne = await $('//div[text()="Reference 1"]/following-sibling::div//input[@data-testid="testReferenceNameInput"]');
         await referenceContactOne.waitForClickable({ timeout: explicitWait });
-        await referenceContactOne.setValue('Test Reference One');     
+        await referenceContactOne.setValue('Test Reference One');
         await browser.pause(pauseTime);
-        
+
         const referenceContactNumberOne = await $('//div[text()="Reference 1"]/following-sibling::div//input[@data-testid="testReferenceNumberInput"]');
         await referenceContactNumberOne.waitForClickable({ timeout: explicitWait });
-        await referenceContactNumberOne.setValue('8792593184');     
+        await referenceContactNumberOne.setValue('8792593184');
         await browser.pause(pauseTime);
 
         const referenceContactTwo = await $('//div[text()="Reference 2"]/following-sibling::div//input[@data-testid="testReferenceNameInput"]');
         await referenceContactTwo.waitForClickable({ timeout: explicitWait });
-        await referenceContactTwo.setValue('Test Reference Two');     
+        await referenceContactTwo.setValue('Test Reference Two');
         await browser.pause(pauseTime);
 
         const referenceContactNumber = await $('//div[text()="Reference 2"]/following-sibling::div//input[@data-testid="testReferenceNumberInput"]');
         await referenceContactNumber.waitForClickable({ timeout: explicitWait });
-        await referenceContactNumber.setValue('8792593185');     
+        await referenceContactNumber.setValue('8792593185');
         await browser.pause(pauseTime);
 
         const referenceConfirmCheckbox = await $('//div[@data-testid="testReferenceConfirmCheckbox"]');
@@ -406,7 +412,7 @@ describe('Hardcoded Login Test', () => {
         await referenceContinueBtn.waitForClickable({ timeout: explicitWait });
         await referenceContinueBtn.click();
         await browser.pause(pauseTime);
-    }); 
+    });
 
     it('Set Up MPIN', async () => {
 
@@ -439,7 +445,7 @@ describe('Hardcoded Login Test', () => {
 
         //   ffmpeg -i "C:\Users\User\Pictures\Camera Roll\WIN_20251014_15_38_44_Pro.mp4" -pix_fmt yuv420p "C:\Users\User\test_framework\resources\camera_selfie.y4m"
 
-    }); */
+    });
 
     after(async () => {
         console.log('Test completed');

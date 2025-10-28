@@ -1,5 +1,7 @@
 const wdio = require("webdriverio");
 const { swipeUpTillElementVisible } = require('../../helpers/swipeUpTillElementVisible');
+const { handleKeyboard } = require('../../helpers/keyboardHelper');
+const { pressBackKey } = require('../../helpers/pressBackKey');
 const axios = require('axios');
 
 async function main() {
@@ -7,7 +9,7 @@ async function main() {
         platformName: "Android",
         "appium:appPackage": "com.zype.mobile.stage",
         "appium:appActivity": "com.zype.mobile.MainActivity",
-        "appium:noReset": false,
+        "appium:noReset": true,
         "appium:autoGrantPermissions": true
     };
 
@@ -63,6 +65,8 @@ async function main() {
         await panInput.setValue(panNumber);
         await driver.pause(pauseTime);
 
+        await handleKeyboard(driver);
+
         const dobInput = await driver.$('//android.widget.EditText[@resource-id="testEnterDOB"]');
         await dobInput.waitForDisplayed({ timeout: explicitWait });
         await dobInput.setValue(dob);
@@ -87,6 +91,9 @@ async function main() {
     }
 
     async function emailAndOtp(email) {
+
+        await pressBackKey(driver);
+
         const emailInput = await driver.$('//android.widget.EditText[@resource-id="testEnterEmail"]');
         await emailInput.waitForDisplayed({ timeout: explicitWait });
         await emailInput.setValue(email);
@@ -222,6 +229,7 @@ async function main() {
     }
     async function DigiiLocker(aadhaarNumber, aadharPin) {
 
+
     }
 
     async function selfie() {
@@ -235,7 +243,7 @@ async function main() {
         await proceedAndTakeSelfieBtn.click();
         await driver.pause(pauseTime);
 
-        await driver.pauseTime(10000);
+        await driver.pause(10000);
 
         const usePhotoBtn = await driver.$('//android.view.ViewGroup[@content-desc="Use this photo"]');
         await usePhotoBtn.waitForDisplayed({ timeout: explicitWait })
@@ -280,6 +288,8 @@ async function main() {
     }
 
     async function setUpMandate(mandateOption) {
+        await driver.$('//android.widget.TextView[@text="Setup Auto-Debit"]').waitForDisplayed({ timeout: 50000 });
+
         const mandateOptionBtn = await driver.$(`//android.view.ViewGroup[contains(@content-desc, "${mandateOption}")]`);
         await mandateOptionBtn.waitForDisplayed({ timeout: explicitWait })
         await mandateOptionBtn.click();
@@ -397,21 +407,21 @@ async function main() {
         //     console.warn('Could not delete mobile, continuing with test...');
         // });
 
-        await enterMobileNumberAndOtp(mobileNumber);
-        await driver.pause(15000);
-        await firstNameLastName('Vijay', 'Belavi');
-        await enterPanAndDob('DGOPB7256L', '18-02-1999');
-        await acceptTnCandKYC();
-        await emailAndOtp('vijaybelavi1432@gmail.com');
-        await driver.pause(15000);
-        await selectEmployement('Salaried');
-        await employementDetails('Fireflink', '65000', 'More than 5 lakhs');
-        await addressDetails('123', 'Main St', '400001', 'Test');
-        await acceptL1Limit();
-        await driver.pause(60000);
+        // await enterMobileNumberAndOtp(mobileNumber);
+        // await driver.pause(15000);
+        // await firstNameLastName('Vijay', 'Belavi');
+        // await enterPanAndDob('DGOPB7256L', '18-02-1999');
+        // await acceptTnCandKYC();
+        // await emailAndOtp('vijaybelavi1432@gmail.com');
+        // await driver.pause(15000);
+        // await selectEmployement('Salaried');
+        // await employementDetails('Fireflink', '65000', 'More than 5 lakhs');
+        // await addressDetails('123', 'Main St', '400001', 'Test');
+        // await acceptL1Limit();
+        // await driver.pause(60000);
         // await DigiiLocker(aadhaarNumber, aadharPin);
-        await selfie();
-        await addBankDetails('000201691528', 'ICIC0000002');
+        // await selfie();
+        // await addBankDetails('000201691528', 'ICIC0000002');
         await setUpMandate('ATM');
         await referenceContactDetails('Test One', '9110420644', 'FRIEND', 'Test Two', '8792593241', 'RELATIVE');
         await setUpMPIN('1111');
